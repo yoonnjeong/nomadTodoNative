@@ -12,6 +12,7 @@ import { useState } from "react";
 export default function App() {
   const [working, setWorking] = useState(true);
   const [text, setText] = useState("");
+  const [toDos, setToDos] = useState({});
 
   const travel = () => {
     setWorking(false);
@@ -23,9 +24,10 @@ export default function App() {
   };
 
   const addToDo = () => {
-    if (!text === "") {
-      alert(text);
+    if (text === "") {
+      return;
     }
+    setText("");
   };
 
   const onChangeText = (payload) => setText(payload);
@@ -57,6 +59,7 @@ export default function App() {
         returnKeyType="done"
         onChangeText={onChangeText}
         style={styles.input}
+        value={text}
         placeholder={working ? "Add a To Do." : "Where do you want to go?"}
       />
     </View>
