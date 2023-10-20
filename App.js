@@ -5,6 +5,7 @@ import {
   View,
   TouchableOpacity,
   TextInput,
+  ScrollView,
 } from "react-native";
 import { theme } from "./color";
 import { useState } from "react";
@@ -16,19 +17,26 @@ export default function App() {
 
   const travel = () => {
     setWorking(false);
-    console.log(working);
+    // console.log(working);
   };
   const work = () => {
     setWorking(true);
-    console.log(working);
+    // console.log(working);
   };
 
   const addToDo = () => {
     if (text === "") {
       return;
     }
+    //save to do
+    // const newToDos = Object.assign({}, toDos, {
+    //   [Date.now()]: { text, work: working },
+    // });
+    const newToDos = { ...toDos, [Date.now()]: { text, work: working } };
+    setToDos(newToDos);
     setText("");
   };
+  console.log(toDos);
 
   const onChangeText = (payload) => setText(payload);
 
@@ -62,6 +70,13 @@ export default function App() {
         value={text}
         placeholder={working ? "Add a To Do." : "Where do you want to go?"}
       />
+      <ScrollView>
+        {Object.keys(toDos).map((key) => (
+          <View style={styles.toDo} key={key}>
+            <Text style={styles.toDoText}>{toDos[key].text}</Text>
+          </View>
+        ))}
+      </ScrollView>
     </View>
   );
 }
@@ -88,7 +103,19 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 30,
-    marginTop: 20,
+    marginVertical: 20,
     fontSize: 18,
+  },
+  toDo: {
+    backgroundColor: theme.toDoBg,
+    marginBottom: 10,
+    paddingVertical: 20,
+    paddingHorizontal: 20,
+    borderRadius: 15,
+  },
+  toDoText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "500",
   },
 });
