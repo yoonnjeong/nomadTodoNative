@@ -73,7 +73,7 @@ export default function App() {
     await saveToDos(newToDos);
     setText("");
   };
-  // console.log(toDos);
+  console.log(toDos);
 
   const toggleCompleteToDo = (key) => {
     let newToDo = { ...toDos };
@@ -82,6 +82,39 @@ export default function App() {
     saveToDos(newToDo);
   };
 
+  const editToDo = (key) => {
+    Alert.prompt("Edit To Do", "How to change Text?", [
+      { text: "Cancel" },
+      {
+        text: "OK",
+        style: "destructive",
+        onPress: (val) => {
+          if (val !== "") {
+            const changeToDo = { ...toDos };
+            changeToDo[key].text = val;
+            setToDos(changeToDo);
+            saveToDos(changeToDo);
+          }
+        },
+      },
+    ]);
+  };
+  // const editToDo = (key) => {
+  //   Alert.prompt("Edit To Do", "How to change Text?", (val) => {
+  //     if (val !== "") {
+  //       let newToDo = { ...toDos };
+  //       const stringKey = key.toString(); // key를 문자열로 변환
+  //       if (newToDo[stringKey]) {
+  //         newToDo[stringKey].text = val;
+  //         setToDos(newToDo);
+  //         saveToDos(newToDo);
+  //       } else {
+  //         // 에러 처리: 해당 key에 해당하는 할 일이 없는 경우
+  //         console.error(`Key ${stringKey} not found in toDos`);
+  //       }
+  //     }
+  //   });
+  // };
   const deleteToDo = (key) => {
     Alert.alert("Delete To Do", "Are you sure?", [
       { text: "Cancel" },
@@ -172,7 +205,10 @@ export default function App() {
               <View
                 style={{ justifyContent: "flex-end", flexDirection: "row" }}
               >
-                <TouchableOpacity style={{ marginRight: 15 }}>
+                <TouchableOpacity
+                  style={{ marginRight: 15 }}
+                  onPress={() => editToDo(key)}
+                >
                   <FontAwesome5 name="pencil-alt" size={18} color="white" />
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => deleteToDo(key)}>
