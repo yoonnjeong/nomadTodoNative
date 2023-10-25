@@ -14,6 +14,7 @@ import { theme } from "./color";
 import { useEffect, useState } from "react";
 
 const STORAGE_KEY = "@toDos";
+const CATAGORY_KEY = "@catagory";
 
 export default function App() {
   const [working, setWorking] = useState(true);
@@ -21,15 +22,29 @@ export default function App() {
   const [toDos, setToDos] = useState({});
   useEffect(() => {
     loadToDos();
+    getCatagory();
   }, []);
 
-  const travel = () => {
-    setWorking(false);
-    // console.log(working);
+  // const travel = () => {
+  //   setWorking(false);
+  //   // console.log(working);
+  // };
+  // const work = () => {
+  //   setWorking(true);
+  //   // console.log(working);
+  // };
+  const changeCatagory = () => {
+    setWorking((prev) => !prev);
+    saveCategory(!working);
   };
-  const work = () => {
-    setWorking(true);
-    // console.log(working);
+
+  const saveCategory = async (working) => {
+    await AsyncStorage.setItem(CATAGORY_KEY, JSON.stringify(working));
+  };
+
+  const getCatagory = async () => {
+    const prevCatagory = await AsyncStorage.getItem(CATAGORY_KEY);
+    setWorking(JSON.parse(prevCatagory));
   };
 
   const loadToDos = async () => {
@@ -55,7 +70,7 @@ export default function App() {
     await saveToDos(newToDos);
     setText("");
   };
-  console.log(toDos);
+  // console.log(toDos);
 
   const deleteToDo = (key) => {
     Alert.alert("Delete To Do", "Are you sure?", [
@@ -80,14 +95,14 @@ export default function App() {
     <View style={styles.container}>
       <StatusBar style="light" />
       <View style={styles.header}>
-        <TouchableOpacity onPress={work}>
+        <TouchableOpacity onPress={changeCatagory}>
           <Text
             style={{ ...styles.btnText, color: working ? "white" : theme.gray }}
           >
             Work
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={travel}>
+        <TouchableOpacity onPress={changeCatagory}>
           <Text
             style={{
               ...styles.btnText,
