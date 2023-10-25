@@ -8,7 +8,7 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
-import { Fontisto } from "@expo/vector-icons";
+import { Fontisto, FontAwesome5 } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { theme } from "./color";
 import { useEffect, useState } from "react";
@@ -65,12 +65,22 @@ export default function App() {
     // const newToDos = Object.assign({}, toDos, {
     //   [Date.now()]: { text, work: working },
     // });
-    const newToDos = { ...toDos, [Date.now()]: { text, working } };
+    const newToDos = {
+      ...toDos,
+      [Date.now()]: { text, working, isCompleted: false },
+    };
     setToDos(newToDos);
     await saveToDos(newToDos);
     setText("");
   };
   // console.log(toDos);
+
+  const toggleCompleteToDo = (key) => {
+    let newToDo = { ...toDos };
+    newToDo[key].isCompleted = !newToDo[key].isCompleted;
+    setToDos(newToDo);
+    saveToDos(newToDo);
+  };
 
   const deleteToDo = (key) => {
     Alert.alert("Delete To Do", "Are you sure?", [
@@ -125,10 +135,43 @@ export default function App() {
         {Object.keys(toDos).map((key) =>
           toDos[key].working === working ? (
             <View style={styles.toDo} key={key}>
-              <Text style={styles.toDoText}>{toDos[key].text}</Text>
+              {/* <Text style={styles.toDoText}>{toDos[key].text}</Text>
               <TouchableOpacity onPress={() => deleteToDo(key)}>
-                <Fontisto name="trash" size={18} color={theme.gray} />
-              </TouchableOpacity>
+                <Fontisto name="trash" size={18} color="white" />
+              </TouchableOpacity> */}
+              <Text
+                style={
+                  toDos[key].isCompleted
+                    ? { ...styles.toDoText, textDecorationLine: "line-through" }
+                    : styles.toDoText
+                }
+              >
+                {toDos[key].text}
+              </Text>
+              <View
+                style={{ justifyContent: "flex-end", flexDirection: "row" }}
+              >
+                <TouchableOpacity
+                  style={{ marginRight: 15 }}
+                  onPress={() => toggleCompleteToDo(key)}
+                >
+                  <Fontisto
+                    name={
+                      toDos[key].isCompleted
+                        ? "checkbox-active"
+                        : "checkbox-passive"
+                    }
+                    size={18}
+                    color="white"
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity style={{ marginRight: 15 }}>
+                  <FontAwesome5 name="pencil-alt" size={18} color="white" />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => deleteToDo(key)}>
+                  <Fontisto name="trash" size={18} color="white" />
+                </TouchableOpacity>
+              </View>
             </View>
           ) : null
         )}
