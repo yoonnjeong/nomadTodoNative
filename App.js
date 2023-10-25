@@ -139,17 +139,8 @@ export default function App() {
               <TouchableOpacity onPress={() => deleteToDo(key)}>
                 <Fontisto name="trash" size={18} color="white" />
               </TouchableOpacity> */}
-              <Text
-                style={
-                  toDos[key].isCompleted
-                    ? { ...styles.toDoText, textDecorationLine: "line-through" }
-                    : styles.toDoText
-                }
-              >
-                {toDos[key].text}
-              </Text>
               <View
-                style={{ justifyContent: "flex-end", flexDirection: "row" }}
+                style={{ justifyContent: "flex-start", flexDirection: "row" }}
               >
                 <TouchableOpacity
                   style={{ marginRight: 15 }}
@@ -165,6 +156,22 @@ export default function App() {
                     color="white"
                   />
                 </TouchableOpacity>
+                <Text
+                  style={
+                    toDos[key].isCompleted
+                      ? {
+                          ...styles.toDoText,
+                          textDecorationLine: "line-through",
+                        }
+                      : styles.toDoText
+                  }
+                >
+                  {toDos[key].text}
+                </Text>
+              </View>
+              <View
+                style={{ justifyContent: "flex-end", flexDirection: "row" }}
+              >
                 <TouchableOpacity style={{ marginRight: 15 }}>
                   <FontAwesome5 name="pencil-alt" size={18} color="white" />
                 </TouchableOpacity>
