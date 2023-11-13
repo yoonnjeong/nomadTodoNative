@@ -7,6 +7,7 @@ import {
   TextInput,
   ScrollView,
   Alert,
+  Platform,
 } from "react-native";
 import { Fontisto, FontAwesome5 } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -50,7 +51,9 @@ export default function App() {
   const loadToDos = async () => {
     const prevToDos = await AsyncStorage.getItem(STORAGE_KEY);
     // console.log(JSON.parse(s));
-    setToDos(JSON.parse(prevToDos));
+    if (prevToDos) {
+      setToDos(JSON.parse(prevToDos));
+    }
   };
 
   const saveToDos = async (toSave) => {
@@ -83,21 +86,33 @@ export default function App() {
   };
 
   const editToDo = (key) => {
-    Alert.prompt("Edit To Do", "How to change Text?", [
-      { text: "Cancel" },
-      {
-        text: "OK",
-        style: "destructive",
-        onPress: (val) => {
-          if (val !== "") {
-            const changeToDo = { ...toDos };
-            changeToDo[key].text = val;
-            setToDos(changeToDo);
-            saveToDos(changeToDo);
-          }
-        },
-      },
-    ]);
+    if (Platform.OS === "web") {
+      const userInput = window.prompt("Edit To Do", "How to change Text?");
+      if (userInput !== null) {
+        if (userInput !== "") {
+          const changeToDo = { ...toDos };
+          changeToDo[key].text = userInput;
+          setToDos(changeToDo);
+          saveToDos(changeToDo);
+        }
+      } else {
+        Alert.prompt("Edit To Do", "How to change Text?", [
+          { text: "Cancel" },
+          {
+            text: "OK",
+            style: "destructive",
+            onPress: (val) => {
+              if (val !== "") {
+                const changeToDo = { ...toDos };
+                changeToDo[key].text = val;
+                setToDos(changeToDo);
+                saveToDos(changeToDo);
+              }
+            },
+          },
+        ]);
+      }
+    }
   };
   // const editToDo = (key) => {
   //   Alert.prompt("Edit To Do", "How to change Text?", (val) => {
@@ -116,20 +131,30 @@ export default function App() {
   //   });
   // };
   const deleteToDo = (key) => {
-    Alert.alert("Delete To Do", "Are you sure?", [
-      { text: "Cancel" },
-      {
-        text: "I'm Sure!",
-        style: "destructive",
-        onPress: async () => {
-          const newToDos = { ...toDos };
-          delete newToDos[key];
-          setToDos(newToDos);
-          await saveToDos(newToDos);
+    if (Platform.OS === "web") {
+      const ok = confirm("Do you want to delete this To Do?");
+      if (ok) {
+        const newToDos = { ...toDos };
+        delete newToDos[key];
+        setToDos(newToDos);
+        saveToDos(newToDos);
+      }
+    } else {
+      Alert.alert("Delete To Do", "Are you sure?", [
+        { text: "Cancel" },
+        {
+          text: "I'm Sure!",
+          style: "destructive",
+          onPress: async () => {
+            const newToDos = { ...toDos };
+            delete newToDos[key];
+            setToDos(newToDos);
+            await saveToDos(newToDos);
+          },
         },
-      },
-    ]);
-    return;
+      ]);
+      return;
+    }
   };
 
   const onChangeText = (payload) => setText(payload);
