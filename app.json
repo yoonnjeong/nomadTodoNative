@@ -31,15 +31,10 @@
         "projectId": "6c8eff9c-0daf-4ac0-91dc-a1034837a624"
       }
     },
-    // "runtimeVersion": {
-    //   "policy": "appVersion"
-    // },
     "updates": {
-      "url": "https://u.expo.dev/6c8eff9c-0daf-4ac0-91dc-a1034837a624",
       "fallbackToCacheTimeout": 0,
       "checkAutomatically": "ON_LOAD",
-      "enabled": true,
-      "releaseChannel": "default"
+      "enabled": true
     },
     "sdkVersion": "47.0.0",
     "platforms": ["ios", "android"]
